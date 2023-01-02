@@ -1,11 +1,9 @@
 ---
-title: Second post
-author: CUSTOM AUTHOR NAME
-publish_date: 2022-05-02
-abstract: This is the second post.
+title: Hello 
+author: 9bany
+publish_date: 2023-01-02
+abstract: This is my first post, just demo this website in first release version.
 ---
-
-<img src="second/hello2.png"/>
 
 Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
 Ipsum has been the industry's standard dummy text ever since the 1500s, when an
