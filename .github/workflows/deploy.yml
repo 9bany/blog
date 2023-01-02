@@ -16,4 +16,4 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "9bany-blog"
-          entrypoint: "./directory/for/blog/main.tsx"
+          entrypoint: "./blogs/main.ts"
