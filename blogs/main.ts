@@ -9,6 +9,6 @@ blog({
   links: [
     { title: "9bany.com", url: "mailto:bany.y0599@gmail.com" },
     { title: "GitHub", url: "https://github.com/9bany" },
-    { title: "Linkedin", url: "https://www.linkedin.com/in/ybuoceban4569/" }
+    { title: "Linkedin", url: "https://www.linkedin.com/in/ybuoceban4569/" },
   ],
 });
