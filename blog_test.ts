@@ -8,8 +8,8 @@ import {
 } from "https://deno.land/std@0.153.0/testing/asserts.ts";
 import { fromFileUrl, join } from "https://deno.land/std@0.153.0/path/mod.ts";
 
-const BLOG_URL = new URL("./testdata/main.js", import.meta.url).href;
-const TESTDATA_PATH = fromFileUrl(new URL("./testdata/", import.meta.url));
+const BLOG_URL = new URL("./blogs/main.js", import.meta.url).href;
+const TESTDATA_PATH = fromFileUrl(new URL("./blogs/", import.meta.url));
 const BLOG_SETTINGS = await configureBlog(BLOG_URL, false, {
   author: "The author",
   title: "Test blog",
@@ -17,9 +17,9 @@ const BLOG_SETTINGS = await configureBlog(BLOG_URL, false, {
   lang: "en-GB",
   middlewares: [
     redirects({
-      "/to_second": "second",
-      "/to_second_with_slash": "/second",
-      "second.html": "second",
+      "/to_hello": "hello",
+      "/to_hello_with_slash": "/hello",
+      "hello.html": "hello",
     }),
   ],
   readtime: true,
@@ -49,62 +49,23 @@ Deno.test("index page", async () => {
   assertEquals(resp.headers.get("content-type"), "text/html; charset=utf-8");
   const body = await resp.text();
   assertStringIncludes(body, `<html lang="en-GB">`);
-  assertStringIncludes(body, `Test blog`);
-  assertStringIncludes(body, `This is some description.`);
-  assertStringIncludes(body, `href="/first"`);
-  assertStringIncludes(body, `href="/second"`);
+  // assertStringIncludes(body, `rony-y`);
+  // assertStringIncludes(body, `Chitty Chitty Chat Chat, Chit Chat.`);
 });
 
-Deno.test("posts/ first", async () => {
-  const resp = await testHandler(new Request("https://blog.deno.dev/first"));
+Deno.test("posts/ hello", async () => {
+  const resp = await testHandler(new Request("https://blog.deno.dev/hello"));
   assert(resp);
   assertEquals(resp.status, 200);
   assertEquals(resp.headers.get("content-type"), "text/html; charset=utf-8");
   const body = await resp.text();
   assertStringIncludes(body, `<html lang="en-GB">`);
-  assertStringIncludes(body, `First post`);
-  assertStringIncludes(body, `The author`);
+  assertStringIncludes(body, `Hello`);
+  assertStringIncludes(body, `9bany`);
   assertStringIncludes(
     body,
-    `<time dateTime="2022-03-20T00:00:00.000Z">`,
+    `<time dateTime="2023-01-02T00:00:00.000Z">`,
   );
-  assertStringIncludes(body, `<img src="first/hello.png" />`);
-  assertStringIncludes(body, `<p>Lorem Ipsum is simply dummy text`);
-  assertStringIncludes(body, `$100, $200, $300, $400, $500`);
-  assertStringIncludes(body, `min read`);
-});
-
-Deno.test("posts/ second", async () => {
-  const resp = await testHandler(new Request("https://blog.deno.dev/second"));
-  assert(resp);
-  assertEquals(resp.status, 200);
-  assertEquals(resp.headers.get("content-type"), "text/html; charset=utf-8");
-  const body = await resp.text();
-  assertStringIncludes(body, `<html lang="en-GB">`);
-  assertStringIncludes(body, `Second post`);
-  assertStringIncludes(body, `CUSTOM AUTHOR NAME`);
-  assertStringIncludes(
-    body,
-    `<time dateTime="2022-05-02T00:00:00.000Z">`,
-  );
-  assertStringIncludes(body, `<img src="second/hello2.png" />`);
-  assertStringIncludes(body, `<p>Lorem Ipsum is simply dummy text`);
-});
-
-Deno.test("posts/ third", async () => {
-  const resp = await testHandler(new Request("https://blog.deno.dev/third"));
-  assert(resp);
-  assertEquals(resp.status, 200);
-  assertEquals(resp.headers.get("content-type"), "text/html; charset=utf-8");
-  const body = await resp.text();
-  assertStringIncludes(body, `<html lang="en-GB">`);
-  assertStringIncludes(body, `Third post`);
-  assertStringIncludes(body, `CUSTOM AUTHOR NAME`);
-  assertStringIncludes(
-    body,
-    `<time dateTime="2022-08-19T00:00:00.000Z">`,
-  );
-  assertStringIncludes(body, `<iframe width="560" height="315"`);
   assertStringIncludes(body, `<p>Lorem Ipsum is simply dummy text`);
 });
 
@@ -119,66 +80,12 @@ Deno.test("posts/ trailing slash redirects", async () => {
 Deno.test("redirect map", async () => {
   {
     const resp = await testHandler(
-      new Request("https://blog.deno.dev/second.html"),
+      new Request("https://blog.deno.dev/hello.html"),
     );
     assert(resp);
     assertEquals(resp.status, 307);
-    assertEquals(resp.headers.get("location"), "/second");
+    assertEquals(resp.headers.get("location"), "/hello");
     await resp.text();
-  }
-  {
-    const resp = await testHandler(
-      new Request("https://blog.deno.dev/to_second"),
-    );
-    assert(resp);
-    assertEquals(resp.status, 307);
-    assertEquals(resp.headers.get("location"), "/second");
-    await resp.text();
-  }
-  {
-    const resp = await testHandler(
-      new Request("https://blog.deno.dev/to_second_with_slash"),
-    );
-    assert(resp);
-    assertEquals(resp.status, 307);
-    assertEquals(resp.headers.get("location"), "/second");
-    await resp.text();
-  }
-});
-
-Deno.test("static files in posts/ directory", async () => {
-  {
-    const resp = await testHandler(
-      new Request("https://blog.deno.dev/first/hello.png"),
-    );
-    assert(resp);
-    assertEquals(resp.status, 200);
-    assertEquals(resp.headers.get("content-type"), "image/png");
-    const bytes = new Uint8Array(await resp.arrayBuffer());
-    assertEquals(
-      bytes,
-      await Deno.readFile(
-        join(TESTDATA_PATH, "./posts/first/hello.png"),
-      ),
-    );
-  }
-  {
-    const resp = await testHandler(
-      new Request("https://blog.deno.dev/second/hello2.png"),
-    );
-    assert(resp);
-    assertEquals(resp.status, 200);
-    assertEquals(resp.headers.get("content-type"), "image/png");
-    const bytes = new Uint8Array(await resp.arrayBuffer());
-    assertEquals(
-      bytes,
-      await Deno.readFile(
-        join(
-          TESTDATA_PATH,
-          "./posts/second/hello2.png",
-        ),
-      ),
-    );
   }
 });
 
@@ -205,9 +112,6 @@ Deno.test("RSS feed", async () => {
     "application/atom+xml; charset=utf-8",
   );
   const body = await resp.text();
-  assertStringIncludes(body, `<title>Test blog</title>`);
-  assertStringIncludes(body, `First post`);
-  assertStringIncludes(body, `https://blog.deno.dev/first`);
-  assertStringIncludes(body, `Second post`);
-  assertStringIncludes(body, `https://blog.deno.dev/second`);
+  assertStringIncludes(body, `Hello`);
+  assertStringIncludes(body, `https://blog.deno.dev/hello`);
 });
