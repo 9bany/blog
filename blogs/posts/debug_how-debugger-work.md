@@ -154,7 +154,7 @@ Source code tôi để [ở đây](#more)
 - Trên linux, debug hoạt động dựa trên một system call là `ptrace()`, tuy nhiên mỗi OS khác nhau thì system call dành cho debug sẽ khác nhau.
 - Trên window có [Process monitor](https://en.wikipedia.org/wiki/Process_Monitor)  là một [sysinternal](https://en.wikipedia.org/wiki/Sysinternals) cho phép làm được điều khá tương tự như `ptrace()`.
 - Trên MacOS, debug cũng dựa trên `ptrace()`, tuy nhiên về `interfaces` và cách hoạt động thì hoàn toàn khác nhau: [ptrace.2](https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man2/ptrace.2.html)
-- VD: Tool debug [Delve](https://github.com/go-delve/delve): Có một [interface](https://github.com/go-delve/delve/blob/master/service/debugger/debugger.go) chung cho debugger và `delve` [impleted interface](https://github.com/go-delve/delve/tree/3847b7a199793a7ff5bbdca0152544d5d34a88db/pkg/proc/native) này đối với từng OS khác nhau dựa vào cách thức mà OS đó hổ trợ.
+- VD: Tool debug [Delve](https://github.com/go-delve/delve): Có một [interface](https://github.com/go-delve/delve/blob/master/service/debugger/debugger.go) chung cho debugger và `delve` [implemented interface](https://github.com/go-delve/delve/tree/3847b7a199793a7ff5bbdca0152544d5d34a88db/pkg/proc/native) này đối với từng OS khác nhau là hoàn toàn khác nhau, cách implement sẽ dựa vào cách thức mà OS đó hổ trợ debugging.
 
 ## More
 
