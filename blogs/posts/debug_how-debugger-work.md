@@ -29,7 +29,7 @@ Bạn có thể xem thêm ở [đây](https://man7.org/linux/man-pages/man2/ptra
 ## Instruction stream, program counter
 Trong đoạn code dưới đây. 
 
-```golang
+```javascript
 // main.go file
 package main
 
@@ -52,7 +52,7 @@ Program counter(PC) (hay còn gọi là instruction pointer (IP)) là một [pro
 
 Chúng ta sẽ dùng lại đoạn code cũ ở trên.
 
-```golang
+```javascript
 // main.go file
 package main
 
@@ -91,7 +91,7 @@ Sau khi build xong !
 ### 2. Let's build debugger 
 
 Chúng sẽ ta chạy `binary` đã build ở trên với `ptrace()` mode trong `linux`.
-```
+```javascript
 	target := "hello/main"
 	cmd := exec.Command(target)
 	// set SysProcAttr với Ptrace: true
@@ -104,7 +104,7 @@ Chúng sẽ ta chạy `binary` đã build ở trên với `ptrace()` mode trong 
 PID, Systable
 - Để `set breakpoint` cần số `pid`, `fileName` và `line`.
 
-```
+```javascript
 pid := cmd.Process.Pid # lấy số pid
 
 symTable = getSymbolTable(target)
@@ -118,7 +118,7 @@ SetBreakpoint, Replace code.
 
 - Bạn có thể thay đổi số `line` mà bạn muốn đặt `breakpoint`. (vd: số line là 10 chẳng hạn)
 
-```
+```javascript
 func setBreak(pid int, filename string, line int) (bool, []byte) {
 	var err error
 	pc, _, err = symTable.LineToPC(filename, line)
@@ -134,7 +134,7 @@ func setBreak(pid int, filename string, line int) (bool, []byte) {
 - `LineToPC`: Chuyển `fileName` và `line` thành `PC` và cũng có hàm làm ngược lại là `PCtoLine`.
 
 Peek and poke
-```
+```javascript
 func replaceCode(pid int, breakpoint uint64, code []byte) []byte {
 	original := make([]byte, len(code))
 	syscall.PtracePeekData(pid, uintptr(breakpoint), original)

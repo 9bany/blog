@@ -11,4 +11,5 @@ blog({
     { title: "GitHub", url: "https://github.com/9bany" },
     { title: "Linkedin", url: "https://www.linkedin.com/in/ybuoceban4569/" },
   ],
+  style:".markdown-body ul, .markdown-body ol { list-style: disc !important;}"
 });
